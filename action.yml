@@ -5,9 +5,20 @@ inputs:
     description: 'Greeting to display'
     required: true
     default: 'Hello from test-action!'
+  verbose:
+    description: 'Enable verbose output'
+    required: false
+    default: 'false'
 runs:
   using: 'composite'
   steps:
     - name: Run greeting
       shell: bash
-      run: echo "${{ inputs.greeting }}"
+      env:
+        VERBOSE: ${{ inputs.verbose }}
+      run: |
+        if [ "$VERBOSE" = "true" ]; then
+          echo "[$(date -u)] ${{ inputs.greeting }}"
+        else
+          echo "${{ inputs.greeting }}"
+        fi
